@@ -1,0 +1,94 @@
+scenarios:
+  default:            # "best estimate"
+    k_fast:
+      "North Pacific":                   1.67
+      "South Pacific":                   3.84
+      Atlantic:                          1.00
+      Indian:                            4.76
+      Mediterranean:                    12.3
+      Arctic:                            0.275
+      "Gulf of Mexico and Caribbean":   16.8
+    k_fast_multiplier: 1.0              # global multiplier
+    alpha_dep:          0.25            # deep-layer labile multiplier
+    fast_fraction:      0.30            # 30 % fast, 70 % slow
+    slow_k:             0.05            # a⁻¹
+    preservation_factor: 0.87           # p_r factor (Sala et al. 2021)
+
+    # Freshness factor by Longhurst province
+    fresh_fact:
+      # — Productive provinces (fresh_fact = 1.5)
+      BENG: 1.5   # Benguela Current
+      CHIL: 1.5   # Humboldt / Chile–Peru Current
+      GUIN: 1.5
+      ISSG: 1.5
+      MONS: 1.5
+      NATR: 1.5
+      SATL: 1.5
+      WTRA: 1.5
+      ETRA: 1.5
+      BRAZ: 1.5
+      INDE: 1.5
+      INDW: 1.5
+      SUND: 1.5
+      CCAL: 1.5
+      NECS: 1.5
+      NWCS: 1.5
+      CARB: 1.5
+      WARM: 1.5
+      AUSE: 1.5
+      AUSW: 1.5
+      NEWZ: 1.5
+      FKLD: 1.5
+
+      # — Cold / subpolar / hypoxic provinces (fresh_fact = 0.5)
+      ARCT: 0.5
+      SARC: 0.5
+      BPLR: 0.5
+      NPPF: 0.5
+      ALSK: 0.5
+      ANTA: 0.5
+      APLR: 0.5
+      SANT: 0.5
+      SSTC: 0.5
+      BERS: 0.5
+      PSAE: 0.5
+      PSAW: 0.5
+      ARCH: 0.5
+      PEQD: 0.5
+      REDS: 0.5
+      ARAB: 0.5
+      KURO: 0.5
+      TASM: 0.5
+      CHIN: 0.5
+      CAMR: 0.5
+      SPTE: 0.5
+
+      # — Standard temperate provinces (fresh_fact = 1.0)
+      NASW: 1.0
+      NASE: 1.0
+      NADR: 1.0
+      GFST: 1.0
+      CNRY: 1.0
+      MEDI: 1.0
+      NPSG: 1.0
+      SPSG: 1.0
+      SPTG: 1.0
+      SPEQ: 1.0
+      SPPF: 1.0
+      NPSW: 1.0
+      NPTG: 1.0
+      PNEC: 1.0
+      EAFR: 1.0
+      GUIA: 1.0
+
+  conservative:
+    inherit: default
+    k_fast_multiplier: 0.5
+    slow_k:            0.025          # slow pool /2 as well
+
+  upper_bound:                        # Sala et al. original
+    inherit: default
+    alpha_dep:        1.0
+    fast_fraction:    1.0
+    slow_k:           0.0
+    k_fast_multiplier: 1.0

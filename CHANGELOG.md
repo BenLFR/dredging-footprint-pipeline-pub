@@ -1,9 +1,21 @@
 # Changelog
 
-All notable changes to this project are documented here.
-Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## [2.0.0] — unreleased; prepared 2026-10-23
 
----
+- Replace the March pipeline with the verified October GRIT source chain, annual SVR cap, OCIM integration
+  and assessment scripts. Preserve the March snapshot under the local `v1.0.0` tag at `df60a43`.
+- Translate messages and identifiers, rename the public layout, parameterise local paths and update source
+  checksum guards. `MANIFEST.tsv` relates all 100 scientific sources to their originals; step 2 is reconstructed.
+- Add input/access documentation, a script map, checksum explanations and explicit reconstruction limits.
+- Replace the old toy smoke CI with source-integrity, syntax and manifest-checker tests. This is not a full
+  numerical reproduction. Remove the March environment lock; GRIT dependency versions remain to be recovered.
+- Correct repository URLs, align the four confirmed authors across citation metadata, remove invented DOI
+  placeholders and regenerate the archive inventory. No v2 release, DOI or scientific data archive exists yet.
+
+## Historical notes retained from the March snapshot
+
+The following notes describe that earlier tree; their paths are not instructions for version 2.0.0.
+They are preserved as historical records and have not been revalidated against the October chain.
 
 ## [1.0.0] — 2026 (pub/v1.0-clean)
 

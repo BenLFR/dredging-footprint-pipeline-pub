@@ -1,56 +1,52 @@
 {
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
-  "name": "Global dredging footprint pipeline",
-  "description": "AIS-based estimation of global swept-area ratio (SAR) and cumulative risk index (CRI) for trailing-suction hopper dredgers, with optional OCIM2-48L CO2 perturbation workflow.",
-  "codeRepository": "https://github.com/BenLFR/Master-thesis-code-",
-  "issueTracker": "https://github.com/BenLFR/Master-thesis-code-/issues",
+  "name": "Dredging footprint pipeline",
+  "description": "AIS-based mapping of trailing-suction hopper dredging, seabed disturbance and first-year sediment-carbon remineralisation, with annual SVR cap, OCIM forcing and uncertainty assessment. Source-only reconstruction of the October 2026 GRIT workflows; external inputs and the full production environment are not supplied. See README.md for validation scope and remaining gaps.",
+  "codeRepository": "https://github.com/BenLFR/dredging-footprint-pipeline-pub",
+  "issueTracker": "https://github.com/BenLFR/dredging-footprint-pipeline-pub/issues",
   "license": "https://spdx.org/licenses/MIT.html",
-  "version": "1.0.0",
-  "datePublished": "2026",
-  "identifier": "https://doi.org/10.5281/zenodo.XXXXXXX",
-  "citation": "https://doi.org/10.5281/zenodo.XXXXXXX",
+  "version": "2.0.0",
+  "dateModified": "2026-10-23",
   "author": [
     {
       "@type": "Person",
       "givenName": "Benjamin",
-      "familyName": "Loeffler"
+      "familyName": "Loeffler",
+      "@id": "https://orcid.org/0009-0008-0641-426X"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Colette",
+      "familyName": "Wabnitz",
+      "@id": "https://orcid.org/0000-0002-5076-9163"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Jean-Baptiste",
+      "familyName": "Jouffray",
+      "@id": "https://orcid.org/0000-0002-4105-6372"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Tracey",
+      "familyName": "Mangin"
     }
   ],
   "keywords": [
     "dredging",
     "AIS",
-    "SAR",
-    "CRI",
-    "OCIM",
-    "marine carbon cycle"
+    "sediment carbon",
+    "uncertainty assessment",
+    "OCIM"
   ],
   "programmingLanguage": [
-    {
-      "@type": "ComputerLanguage",
-      "name": "R"
-    },
-    {
-      "@type": "ComputerLanguage",
-      "name": "Python"
-    },
-    {
-      "@type": "ComputerLanguage",
-      "name": "MATLAB"
-    },
-    {
-      "@type": "ComputerLanguage",
-      "name": "Bash"
-    }
+    "R",
+    "Python",
+    "MATLAB",
+    "Bash"
   ],
-  "softwareRequirements": [
-    "R (see renv.lock)",
-    "Python (see requirements.txt)",
-    "MATLAB R2021a+ for optional CO2 step"
-  ],
-  "operatingSystem": [
-    "Linux",
-    "Windows"
-  ],
-  "readme": "https://github.com/BenLFR/Master-thesis-code-/blob/pub/v1.0-clean/README.md"
+  "softwareRequirements": "See docs/ENVIRONMENT.md; full GRIT production versions not yet recovered.",
+  "operatingSystem": "Linux / Slurm (GRIT workflow); local path configuration required",
+  "readme": "https://github.com/BenLFR/dredging-footprint-pipeline-pub/blob/v2/README.md"
 }

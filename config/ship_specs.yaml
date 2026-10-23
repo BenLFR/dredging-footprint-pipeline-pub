@@ -3,8 +3,8 @@
 # Note: Goryo 6 Ho excluded (corrupted data)
 # Units:
 #   - service_speed_kn        : knots
-#   - suction_pipe_diameter_mm: millimetres (single pipe; twin indicated by twin_pipes: 2)
-#   - dredge_width_m          : nominal drag-head width in metres (suction_diameter/1000 by default)
+#   - suction_pipe_diameter_mm: millimetres (one pipe; the number of pipes is n_suction_pipes)
+#   - dredge_width_m          : suction pipe diameter in metres (suction_pipe_diameter_mm / 1000); the draghead width is derived from it in constants.R
 #   - dredging_depth_m        : maximum dredging depth (m)
 #   - hopper_capacity_m3      : cubic metres
 #   - installed_power_kw      : kilowatts
@@ -12,10 +12,11 @@
 #   - draught_m               : metres
 
 ship_specs:
-  - ssvid: 253373000   # Cristobal Colon
+  - ssvid: 253373000
     name: "Cristobal Colon"
     service_speed_kn: 18
     suction_pipe_diameter_mm: 1300
+    n_suction_pipes: 2   # Jan De Nul, vessel sheet: 'Suction pipe diameter 1,300 mm' + White Rose 'two suction pipes'
     dredge_width_m: 1.3
     dredging_depth_m: 155
     hopper_capacity_m3: 46000
@@ -24,10 +25,11 @@ ship_specs:
     draught_m: 15.15
     imo: 9429572
 
-  - ssvid: 253403000   # Leiv Eiriksson
+  - ssvid: 253403000
     name: "Leiv Eiriksson"
     service_speed_kn: 18
     suction_pipe_diameter_mm: 1300
+    n_suction_pipes: 2   # Jan De Nul, vessel sheet + Ship Technology 'the two suction pipes'
     dredge_width_m: 1.3
     dredging_depth_m: 155
     hopper_capacity_m3: 45458
@@ -36,10 +38,11 @@ ship_specs:
     draught_m: 15.15
     imo: 9429584
 
-  - ssvid: 245508000   # Ham 318
+  - ssvid: 245508000
     name: "Ham 318"
     service_speed_kn: 17.3
     suction_pipe_diameter_mm: 1200
+    n_suction_pipes: 2   # Van Oord, 2023 vessel sheet: 'Suction pipes 2 x o 1,200 mm'
     dredge_width_m: 1.2
     dredging_depth_m: 70
     hopper_capacity_m3: 37293
@@ -48,10 +51,11 @@ ship_specs:
     draught_m: 13.37
     imo: 9229556
 
-  - ssvid: 209469000   # Fairway
+  - ssvid: 209469000
     name: "Fairway"
     service_speed_kn: 16.1
     suction_pipe_diameter_mm: 1200
+    n_suction_pipes: 2   # Boskalis, 2023 vessel sheet: 'Suction pipe diameter 2x1,200 mm'
     dredge_width_m: 1.2
     dredging_depth_m: 55
     hopper_capacity_m3: 35508
@@ -60,10 +64,11 @@ ship_specs:
     draught_m: 11.03
     imo: 9132454
 
-  - ssvid: 210138000   # Queen of the Netherlands
+  - ssvid: 210138000
     name: "Queen Of The Netherlands"
     service_speed_kn: 16.1
     suction_pipe_diameter_mm: 1200
+    n_suction_pipes: 2   # Boskalis, 2023 vessel sheet: 'Suction pipe diameter 2 x 1,200 mm'
     dredge_width_m: 1.2
     dredging_depth_m: 83
     hopper_capacity_m3: 35500
@@ -72,12 +77,12 @@ ship_specs:
     draught_m: 11.03
     imo: 9164031
 
-  - ssvid: 533180137   # Inai Kenanga
+  - ssvid: 533180137
     name: "Inai Kenanga"
     service_speed_kn: 18.4
     suction_pipe_diameter_mm: 1200
-    twin_pipes: 2
-    dredge_width_m: 2.4        # 2 x 1.2 m
+    n_suction_pipes: 2   # Vuyk Engineering: 'two complete trailing suction pipe systems'
+    dredge_width_m: 1.2        # Pipe DIAMETER
     dredging_depth_m: 45
     hopper_capacity_m3: 32000
     installed_power_kw: 28800
@@ -85,10 +90,11 @@ ship_specs:
     draught_m: 12
     imo: 9568782
 
-  - ssvid: 205744000   # Vasco da Gama (unified MMSI - Belgium, most recent)
+  - ssvid: 205744000   # Vasco da Gama (unified MMSI - Belgium, the most recent)
     name: "Vasco Da Gama"
     service_speed_kn: 16.5
     suction_pipe_diameter_mm: 1400
+    n_suction_pipes: 2   # Deltamarin, designer: 'Diameter of suction pipes (2 No.) 1.400 mm'
     dredge_width_m: 1.4
     dredging_depth_m: 60
     hopper_capacity_m3: 33125
@@ -97,22 +103,23 @@ ship_specs:
     draught_m: 14.6
     imo: 9187473
     coverage_period: "2013-2024"
-    observations: 1078681  # 189289 + 889392 (after trim and deduplication)
+    observations: 1078681  # 189289 + 889392 (after trimming and de-duplication)
     mmsi_history:
       - mmsi: 253193000
         flag: Luxembourg
         period: "2013-2019"
-        observations: 189289  # after removing 25 overlapping rows
+        observations: 189289  # after removing the 25 overlapping rows
       - mmsi: 205744000
         flag: Belgium  
         period: "2018-2024"
         observations: 889392
 
-  - ssvid: 246351000   # Vox Maxima
+  - ssvid: 246351000
     name: "Vox Maxima"
     service_speed_kn: 17
-    suction_pipe_diameter_mm: 1300
-    dredge_width_m: 1.3
+    suction_pipe_diameter_mm: 1400
+    n_suction_pipes: 1   # IHC Merwede, via the press: 'single suction tube with an underwater pump'
+    dredge_width_m: 1.4
     dredging_depth_m: 70
     hopper_capacity_m3: 31200
     installed_power_kw: 31309
@@ -120,10 +127,11 @@ ship_specs:
     draught_m: 12.25
     imo: 9454096
 
-  - ssvid: 253422000   # Charles Darwin
+  - ssvid: 253422000
     name: "Charles Darwin"
     service_speed_kn: 14
     suction_pipe_diameter_mm: 1200
+    n_suction_pipes: 2   # Jan De Nul, vessel sheet: 'Suction pipe diameter 2 x 1,200 mm'
     dredge_width_m: 1.2
     dredging_depth_m: 93.5
     hopper_capacity_m3: 30500
@@ -132,10 +140,11 @@ ship_specs:
     draught_m: 13
     imo: 9528079
 
-  - ssvid: 253688000   # Congo River
+  - ssvid: 253688000
     name: "Congo River"
     service_speed_kn: 16.6
     suction_pipe_diameter_mm: 1300
+    n_suction_pipes: 2   # DEME, vessel sheet: 'suction pipe 2 x 1,300 mm'
     dredge_width_m: 1.3
     dredging_depth_m: 36
     hopper_capacity_m3: 30000

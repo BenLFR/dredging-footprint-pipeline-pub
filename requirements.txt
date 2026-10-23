@@ -1,12 +1,11 @@
-# Python dependencies for Step 7 and post-processing scripts.
-# Install with:
-#   pip install -r requirements.txt
-
-numpy==2.1.1
-scipy==1.14.1
-pandas==2.2.2
-xarray==2024.7.0
-matplotlib==3.9.2
-pyarrow==17.0.0
-h5py==3.12.1
-cartopy==0.23.0
+# Static import inventory, not a lockfile or a verified GRIT environment.
+# See docs/ENVIRONMENT.md; includes the postprocessing requirements.
+cartopy
+h5py
+matplotlib
+netCDF4
+numpy
+pandas
+pyarrow
+scipy
+xarray

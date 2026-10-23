@@ -1,62 +1,28 @@
 # Contributing
 
-Thank you for your interest in contributing to the dredging footprint pipeline.
+This is a research source archive with a reconstructed public layout. Read [README.md](README.md),
+[INPUTS.md](docs/INPUTS.md) and [CHECKSUMS.md](docs/CHECKSUMS.md) before changing a script.
 
-## Reporting issues
+Run the source checks with Python, R and Bash installed:
 
-Open an issue on the
-[GitHub issue tracker](https://github.com/BenLFR/dredging-footprint-pipeline-/issues)
-and include:
+```sh
+python -m unittest discover -s tests -v
+python scripts/check_source.py --syntax
+python scripts/make_archive_manifest.py --check
+```
 
-- R or MATLAB version
-- Operating system
-- Full error message and stack trace
-- Pipeline step that failed (`step0` – `step7`)
-- Minimal reproduction (toy data or anonymised excerpt if possible)
+These checks compare source bytes and parse syntax; they do not run the scientific analysis. Do not commit
+AIS data, model matrices, credentials, local path settings or generated outputs. Use `config/paths.example.env`
+to describe required paths, and keep actual values in the ignored `paths.env`.
 
-## Pull requests
+For a source change, explain its scientific effect, the affected input/output contract and its validation.
+Update the published checksum in `MANIFEST.tsv` only after reviewing the change. Keep the original GRIT
+fingerprint as provenance; do not present changed code as the exact historical execution. Review checksum
+guards that refer to changed source files, and preserve job-approval checks.
 
-1. Fork the repository and branch from `main`.
-2. Name your branch `feature/stepN-description` or `fix/short-description`.
-3. Keep commits focused; use `stepN: short imperative description` (≤ 72 chars).
-4. Run the smoke test before opening a PR:
-   ```bash
-   Rscript tests/smoke_test_steps2_5.R
-   Rscript tests/smoke_test_steps3_6_entrypoints.R
-   ```
-5. Do not commit large binary files (`.rds`, `.mat`, `.parquet`, `.tif` > 1 MB).
-6. Do not commit cluster-specific paths, credentials, or SSH config files.
+Record exact input versions, dependency versions, commands and output checksums when performing a new run.
+Do not describe a syntax check as a reproduction of a reported result.
 
-## Code style
-
-**R**
-- Follow [tidyverse style](https://style.tidyverse.org/): snake_case, 2-space indent, no trailing whitespace.
-- Use `data.table` idioms for performance-critical sections.
-- Write comments in English.
-
-**Shell**
-- Start every script with `set -euo pipefail`.
-- Prefer `[[` over `[`; quote all variable expansions.
-- Write comments in English.
-
-**MATLAB**
-- ALLCAPS for constants; each function in its own `.m` file.
-- Write comments in English.
-
-## Testing
-
-The repository includes three test layers:
-
-| Test | Command |
-|------|---------|
-| Smoke test (steps 2–5, toy data) | `Rscript tests/smoke_test_steps2_5.R` |
-| Entrypoint parse check (steps 3–6) | `Rscript tests/smoke_test_steps3_6_entrypoints.R` |
-| HPC template sanity check | `Rscript tests/hpc_template_path_check.R` |
-| testthat suite | `Rscript -e "testthat::test_dir('tests/testthat')"` |
-
-All tests must pass before a PR can be merged.
-
-## Versioning
-
-This project follows [Semantic Versioning](https://semver.org/).
-Update `CHANGELOG.md` and `CITATION.cff` before tagging a release.
+After reviewing changes, stage the intended file inventory and regenerate `ARCHIVE_MANIFEST.yaml` with
+`python scripts/make_archive_manifest.py`, then stage the manifest and run its `--check` mode. This inventory
+covers tracked source and documentation, not an execution archive or a set of scientific outputs.

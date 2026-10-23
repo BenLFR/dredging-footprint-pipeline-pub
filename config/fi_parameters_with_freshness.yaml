@@ -9,11 +9,51 @@ scenarios:
       Arctic: 0.275
       "Gulf of Mexico and Caribbean": 16.8
     k_fast_multiplier: 1.0
-    alpha_dep: 0.30
+    alpha_dep: 0.25
     fast_fraction: 0.30
     slow_k: 0.05
+    # Depth weights. "mechanistic": alpha and w
+    # per pool, derived from D_b (mixing) and omega (burial); alpha_dep is then
+    # NOT used. "fixed": former calculation (alpha_dep over 5-10 cm, nothing below 10 cm).
+    depth_mode: mechanistic
+    Db_cm2_yr: 24.3    # Middelburg et al. 1996 GBC 10:661 table 1: D_b = 4.4 x 10^(0.7624 - 0.000397 z), z = 50 m
+    omega_cm_yr: 0.42  # same source: omega = 3.3 x 10^(-0.8748 - 0.000435 z) cm/yr, z = 50 m
     preservation_factor: 0.87   # p_r: fraction that resettles in originating cell (Sala et al. 2021)
-    depletion_factor: 0.272     # d_i: OC stock depletion after >10 years chronic trawling (Atwood et al. 2023)
+    depletion_factor: 0.272     # d_i: OC stock depletion after >10 years chronic trawling (Atwood et al. 2024)
+    # fresh_fact: NOT in the central estimate (explicit decision): no source gives x1.5 / x0.5,
+    # and the direction of the x0.5 is called into question by
+    # Arndt et al. 2013 (sect. 6.3) and Xu et al. 2023. Without fresh_fact, the merge
+    # sets fresh_fact = 1.0 everywhere. The table is kept as is in the scenario
+    # freshness_provinces, at the bottom of the file.
+  conservative:
+    inherit: default
+    k_fast_multiplier: 0.5
+    slow_k: 0.025
+  upper_bound:
+    inherit: default
+    depth_mode: fixed   # slow_k = 0 makes the mechanistic mode undefined
+    alpha_dep: 1.0
+    fast_fraction: 1.0
+    slow_k: 0.0
+    k_fast_multiplier: 1.0
+  # --- depth-profile scenarios ---
+  fixed_ref:          # reproduces the former calculation (fixed depth weights)
+    inherit: default
+    depth_mode: fixed
+  omega_0p1:          # sensitivity to the burial rate (Assessment)
+    inherit: default
+    omega_cm_yr: 0.1
+  omega_1:
+    inherit: default
+    omega_cm_yr: 1.0
+  omega_5:            # order of magnitude of a silted port or channel
+    inherit: default
+    omega_cm_yr: 5.0
+  # --- former freshness correction, as a scenario ---
+  # Per-province comments NOT corrected: several are wrong (PSAE/PSAW, NWCS, AUSW);
+  # codes SPTE, NPSG, SPTG, SPPF, SPEQ do not exist in Longhurst (inert).
+  freshness_provinces:
+    inherit: default
     # Province-scale freshness correction applied to p_l_eff before kinetics.
     # ×1.5 = high-export provinces (upwelling, high primary productivity, reactive OC flux)
     # ×0.5 = cold sub-polar or isolated/hypoxic provinces (slow degradation / preservation)
@@ -82,13 +122,3 @@ scenarios:
       CAMR: 1.0   # Central American Coastal — moderate productivity
       EAFR: 1.0   # Eastern Africa Coastal — moderate
       GUIA: 1.0   # Guyana Current — moderate
-  conservative:
-    inherit: default
-    k_fast_multiplier: 0.5
-    slow_k: 0.025
-  upper_bound:
-    inherit: default
-    alpha_dep: 1.0
-    fast_fraction: 1.0
-    slow_k: 0.0
-    k_fast_multiplier: 1.0

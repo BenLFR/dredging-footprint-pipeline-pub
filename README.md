@@ -1,77 +1,76 @@
-# Global Dredging Footprint Pipeline
+# Dredging footprint pipeline
 
-[![Quality Gate](https://github.com/BenLFR/dredging-footprint-pipeline-/actions/workflows/smoke_test.yml/badge.svg)](https://github.com/BenLFR/dredging-footprint-pipeline-/actions/workflows/smoke_test.yml)
+Code for estimating the sediment-carbon footprint of trailing-suction hopper dredgers from AIS tracks,
+and for evaluating its uncertainty. This tree contains the October 2026 production chain, annual SVR cap,
+OCIM forcing and assessment scripts. The March implementation remains available at `v1.0.0`.
 
-This repository estimates global seafloor swept-area ratio (SAR) and cumulative
-risk index (CRI) for trailing-suction hopper dredgers (TSHDs) from AIS vessel
-tracks, and provides an optional OCIM2-48L export workflow for downstream CO2
-perturbation modeling.
+This branch prepares version 2.0.0. No v2 release or archive DOI has been issued.
 
-## Quick Start (local, toy data)
+## Start here
+
+1. Read [inputs and access](docs/INPUTS.md) and obtain the external data and model dependencies.
+2. Read [environment](docs/ENVIRONMENT.md). The GRIT production environment is not yet fully recorded.
+3. Copy [config/paths.example.env](config/paths.example.env) to an untracked `paths.env` and set its four paths.
+4. Adapt the Slurm partition, node exclusions, module loads and library locations to your cluster.
+5. Follow the entry points below and the [script-to-paper map](docs/SCRIPT_MAP.md).
 
 ```bash
-git clone https://github.com/BenLFR/dredging-footprint-pipeline-.git
-cd dredging-footprint-pipeline-
-git checkout pub/v1.0-clean
+set -a
+. ./paths.env
+set +a
+python3 scripts/check_source.py
+python3 scripts/check_source.py --syntax
+python3 -m unittest discover -s tests -p 'test_*.py'
+python3 scripts/make_archive_manifest.py --check
 ```
 
-```bash
-Rscript tests/run_testthat.R
-Rscript tests/benchmark_regression_guard.R
-Rscript tests/hpc_template_path_check.R
-Rscript tests/smoke_test_steps2_5.R
-```
+These commands check source integrity, syntax and the manifest checker. They do not load AIS data,
+submit Slurm jobs, run MATLAB or reproduce the paper's numerical results.
 
-## Pipeline Steps
+## Workflow
 
-| Step | Script | Description |
-|------|--------|-------------|
-| 0 | `pipeline/step0/step0_core_window.R` | Coverage matrix and core temporal window |
-| 1 | `pipeline/step1/step1_split_vessels.R` | AIS split by vessel (MMSI) |
-| 2 | `pipeline/step2/step2_process_vessel.R` | Per-vessel filtering and cleaning |
-| 3 | `pipeline/step3/step3_merge.R` | Merge and activity classification (GMM + DBSCAN) |
-| 4 | `pipeline/step4/step4_add_lithology.R` | Lithology join (dbSEABED) |
-| 5 | `pipeline/step5/step5_*.R` | Tile SAR computation and global merge |
-| 6 | `pipeline/step6/step6_calculate_cri.R` | CRI computation |
-| 7 | `pipeline/step7/step7_export_jdredge.R` | OCIM2-48L forcing export |
+| Component | Entry points | Role |
+|---|---|---|
+| Coverage and vessel split | `pipeline/step0_window_select_grit.sh`, `pipeline/step1_split_vessels.sh` | Select the coverage window and split vessel records |
+| Cleaning and classification | `pipeline/step2_process_array.sh`, `pipeline/step3_r6.sh` | Clean each vessel, merge and classify activity |
+| Lithology | `pipeline/step4_rerun.sbatch` | Associate dbSEABED/HubOcean sediment information |
+| Disturbance grid | `pipeline/step5a_make_tiles.sh`, `pipeline/step5_batch.sbatch`, `pipeline/merge_rerun.sbatch` | Tile processing, SAR/SVR and remineralised fraction |
+| Carbon and forcing | `pipeline/step6_pr.sbatch`, `pipeline/step7_export_jtrawl_grit.sh` | Carbon estimates and OCIM forcing |
+| Annual cap | `annual_svr/launch_year.sbatch`, `annual_svr/ocim/launch_svr_ocim.sh` | Annual SVR cap and associated carbon/forcing |
+| Forcing window | `annual_svr/ocim/launch_ocim_window.sh` | OCIM forcing over the selected dredging window |
+| Assessment | `assessment/` and `pipeline/lock_*.R` | Uncertainty analyses and reference checks |
 
-See `docs/architecture.md` for full data-flow diagram, formulas, and I/O table.
+The launchers retain the cluster settings and dated run identifiers used for the study. Several require
+specific earlier run outputs; this table is an execution order, not a single-command installation.
+Use each script's documented arguments and `DRY=1` where supported before submitting work.
 
-## Data Availability
+`DFP_REPO` is code; `DFP_DATA` is external data and run products; `DFP_SCRATCH` is cluster work storage;
+`DFP_LOCAL` is the local working-data tree. Their expected contents are listed in [INPUTS.md](docs/INPUTS.md).
+Names retained in French identify archived data interfaces and runs: [GLOSSARY.md](docs/GLOSSARY.md).
 
-Raw AIS tracks are restricted-access and are not redistributed in this
-repository.
+## Provenance and validation
 
-Source used for this study:
-- Global Fishing Watch (GFW) AIS access via Stanford Center for Ocean Solutions.
+[MANIFEST.tsv](MANIFEST.tsv) links every scientific source file to its original GRIT path and original/public
+MD5. [CHECKSUMS.md](docs/CHECKSUMS.md) lists the active guard updates. Source bytes are preserved by Git
+attributes. The local translation check verified structural identity after the declared naming, path,
+message and checksum transformations; it did not execute the scientific pipeline.
 
-For access guidance:
-- Contact David Kroodsma (Global Fishing Watch).
+[ARCHIVE_MANIFEST.yaml](ARCHIVE_MANIFEST.yaml) records the SHA-256 and size of every tracked file except
+itself. It uses JSON syntax, valid YAML 1.2, and is regenerated by `scripts/make_archive_manifest.py`.
 
-See `data/README.md` and `docs/data_policy.md` for details.
+Step 2 is a mechanically reconstructed worker, validated against archived outputs; its original executed
+file was damaged. Read [its provenance](pipeline/step2_PROVENANCE.md). Do not interpret its manifest entry
+as recovery of an intact original file.
 
-## Optional External CO2 Dependency
+The CI checks source fingerprints and R/Python/shell syntax. It does not certify the scientific calculations.
+Outstanding reproduction requirements are explicit in [ENVIRONMENT.md](docs/ENVIRONMENT.md) and
+[INPUTS.md](docs/INPUTS.md), including the still-unidentified producer of the archived in-place fraction tables.
 
-The OCIM MATLAB solver code is third-party and not vendored.
-See `data/README.md` (section 6b) and `THIRD_PARTY_NOTICES.md`.
+## Public/private boundary and licence
 
-## Cluster-Neutral HPC Deployment
+This repository contains code and parameter/source metadata. It contains no AIS tracks, processed AIS tables,
+spatial result grids, OCIM2 matrices, WOA09 data, credentials, private journals or archived run outputs.
+Those inputs must be obtained separately; the public repository grants no rights over third-party material.
 
-Generic SLURM helper scripts and templates are provided in `deploy/`:
-- `deploy/hpc_submit.sh` — generic `sbatch` wrapper with cluster overrides
-- `deploy/config.example.env` — path and scheduler override variables
-- `deploy/HPC_WORKFLOW_GENERIC.md` — step-by-step HPC deployment guide
-
-Wrappers support environment overrides:
-`PIPELINE_DIR`, `SCRATCH_DIR`, `OUTPUT_DIR`, `CONFIG_DIR`, `LOGS_DIR`
-
-## Reproducibility and FAIR Docs
-
-- `docs/reproducibility.md`
-- `docs/ZENODO_INTEGRATION_GUIDE.md`
-- `ARCHIVE_MANIFEST.yaml`
-
-## Citation and License
-
-- Citation metadata: `CITATION.cff` and `codemeta.json`
-- Code license: `LICENSE` (MIT)
+Project code is distributed under the [MIT licence](LICENSE). External sources and access routes are described
+in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The original data-access agreements remain applicable.

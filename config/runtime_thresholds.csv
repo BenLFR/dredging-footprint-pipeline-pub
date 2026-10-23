@@ -1,2 +1,0 @@
-metric,exec,args,baseline_sec,max_regression_pct,absolute_margin_sec
-entrypoints_smoke,Rscript,tests/smoke_test_steps3_6_entrypoints.R,2.0,300,8.0

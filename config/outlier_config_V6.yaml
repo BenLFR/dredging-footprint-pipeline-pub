@@ -1,110 +1,110 @@
 # ===============================================================================
-# CONFIGURATION SYSTÈME DE DÉTECTION D'OUTLIERS V6
-# Fichier de paramètres pour ajustement métier sans modification du code R
+# V6 OUTLIER DETECTION SYSTEM CONFIGURATION
+# Parameter file for operational tuning without changing the R code
 # ===============================================================================
 
-# Seuils techniques adaptatifs par navire
+# Adaptive technical thresholds per vessel
 technique:
-  speed_margin_pct: 0.15          # 15% marge sur sailing_speed_knots
-  default_max_speed: 25           # Vitesse max par défaut si specs manquantes (kn)
-  missing_specs_threshold: 0.10   # Seuil d'alerte si >10% specs manquantes
+  speed_margin_pct: 0.15          # 15% margin on sailing_speed_knots
+  default_max_speed: 25           # Default max speed if specs are missing (kn)
+  missing_specs_threshold: 0.10   # Alert threshold if >10% of specs are missing
 
-# Isolation Forest multivariée
+# Multivariate Isolation Forest
 isolation_forest:
-  contamination_rate: 0.03        # Réduit de 5% à 3% pour économiser mémoire
-  sample_size: 512                # Réduit de 1000 à 512 pour économiser mémoire
-  num_trees: 50                   # Réduit de 100 à 50 arbres
-  min_points_per_vessel: 100      # Minimum de points pour appliquer IF par navire
-  max_depth: 8                    # Limite profondeur pour économiser mémoire
+  contamination_rate: 0.03        # 3% rather than 5%, to save memory
+  sample_size: 512                # 512 rather than 1000, to save memory
+  num_trees: 50                   # 50 trees rather than 100
+  min_points_per_vessel: 100      # Minimum number of points to apply IF per vessel
+  max_depth: 8                    # Depth limit to save memory
 
-# Détection pics temporels isolés
+# Detection of isolated temporal spikes
 temporal_spikes:
-  spike_factor: 5.0                # 5x MAD pour détection pics temporels (thesis §2.2)
-  min_duration: 2                 # Durée min voisinage pour éviter faux positifs
-  rolling_window: 5               # Taille fenêtre rolling pour médiane/MAD
+  spike_factor: 5.0                # 5x MAD for temporal spike detection (thesis §2.2)
+  min_duration: 2                 # Minimum neighbourhood duration to avoid false positives
+  rolling_window: 5               # Rolling window size for median/MAD
 
-# Percentiles robustes contextuels
+# Robust contextual percentiles
 contextual:
-  percentile_lower: 0.01           # 1er percentile pour valeurs basses extrêmes
-  percentile_upper: 0.99           # 99e percentile pour valeurs hautes extrêmes
-  min_context_points: 20          # Min points pour percentiles stables → fallback IQR
+  percentile_lower: 0.01           # 1st percentile for extreme low values
+  percentile_upper: 0.99           # 99th percentile for extreme high values
+  min_context_points: 20          # Min points for stable percentiles → IQR fallback
   
-  # Seuils classification contexte opérationnel (kn)
+  # Operational context classification thresholds (kn)
   context_thresholds:
-    stop_threshold: 1.0           # Speed < 1kn = arrêt/mouillage
-    dredging_threshold: 4.0       # Speed < 4kn = opération dragage
-    maneuver_threshold: 8.0       # Speed < 8kn = manœuvre lente
-    # Speed >= 8kn = transit rapide
+    stop_threshold: 1.0           # Speed < 1kn = stopped/anchored
+    dredging_threshold: 4.0       # Speed < 4kn = dredging operation
+    maneuver_threshold: 8.0       # Speed < 8kn = slow manoeuvre
+    # Speed >= 8kn = fast transit
 
-# Validation physique maritime
+# Physical plausibility checks
 physics:
-  max_acceleration_ms2: 2.0       # Accélération max réaliste gros navires (m/s²)
-  max_turn_at_speed: 120          # Angle max virage si Speed > 5kn (degrés)
-  max_dredging_speed: 6.0         # Vitesse max cohérente avec dragage (kn)
-  min_speed_for_turn_check: 5.0   # Vitesse min pour vérifier virages brutaux (kn)
+  max_acceleration_ms2: 2.0       # Realistic max acceleration for large vessels (m/s²)
+  max_turn_at_speed: 120          # Max turn angle if Speed > 5kn (degrees)
+  max_dredging_speed: 6.0         # Max speed consistent with dredging (kn)
+  min_speed_for_turn_check: 5.0   # Min speed for checking sharp turns (kn)
 
-# Performance et optimisation
+# Performance and optimisation
 performance:
-  parallel_threshold: 1000000     # Nb points pour activer parallélisme
-  memory_cleanup: true            # Purge objets IF après utilisation
-  enable_logging: true            # Sauvegarde outliers pour audit
-  verbose_diagnostics: true       # Affichage détaillé du nettoyage
+  parallel_threshold: 1000000     # Number of points to enable parallelism
+  memory_cleanup: true            # Purge IF objects after use
+  enable_logging: true            # Save outliers for audit
+  verbose_diagnostics: true       # Detailed display of the cleaning
 
-# Paramètres avancés (experts seulement)
+# Advanced parameters (experts only)
 advanced:
-  # Contamination adaptative pour petits échantillons
+  # Adaptive contamination for small samples
   adaptive_contamination: true
-  min_sample_size: 500          # Taille min pour contamination normale
+  min_sample_size: 500          # Min size for normal contamination
   
-  # Fallback IQR pour contextes avec peu de données
+  # IQR fallback for contexts with few data
   iqr_fallback:
-    multiplier: 1.5               # Multiplicateur IQR standard
+    multiplier: 1.5               # Standard IQR multiplier
     enabled: true
     
-  # Conversion physique
-  ms2_to_knots_factor: 1.943844   # Facteur conversion m/s² → kn/s
+  # Physical conversion
+  ms2_to_knots_factor: 1.943844   # Conversion factor m/s² → kn/s
 
-# Validation et audit
+# Validation and audit
 audit:
-  save_removed_outliers: true     # Sauvegarder outliers supprimés (CSV détaillés)
-  consolidate_logs: true          # Créer fichier audit consolidé
-  save_config_copy: true          # Sauver config utilisée pour traçabilité
-  summary_statistics: true        # Générer résumé statistiques nettoyage
-  write_outlier_csv: true         # Flag I/O : false sur gros jobs (>100M lignes)
+  save_removed_outliers: true     # Save removed outliers (detailed CSV)
+  consolidate_logs: true          # Create consolidated audit file
+  save_config_copy: true          # Save the configuration used, for traceability
+  summary_statistics: true        # Generate cleaning statistics summary
+  write_outlier_csv: true         # I/O flag: false on large jobs (>100M rows)
 
 # ===============================================================================
-# NOTES POUR L'ÉQUIPE MÉTIER :
+# NOTES FOR OPERATIONAL USERS:
 #
-# 1. TECHNIQUE : Ajustez speed_margin_pct si les navires rapides perdent trop
-#    de données légitimes (augmenter) ou si trop d'outliers passent (diminuer)
+# 1. TECHNICAL: adjust speed_margin_pct if fast vessels lose too much
+#    legitimate data (increase) or if too many outliers pass (decrease)
 #
-# 2. ISOLATION FOREST : contamination_rate plus élevé = plus permissif
-#    Valeurs recommandées : 0.03-0.07 selon la qualité des capteurs
+# 2. ISOLATION FOREST: higher contamination_rate = more permissive
+#    Recommended values: 0.03-0.07 depending on sensor quality
 #
-# 3. PICS TEMPORELS : spike_factor plus bas = plus strict (2-4 recommandé)
-#    Diminuer si trop d'erreurs capteur passent, augmenter si manœuvres perdues
+# 3. TEMPORAL SPIKES: lower spike_factor = stricter (2-4 recommended)
+#    Decrease if too many sensor errors pass, increase if manoeuvres are lost
 #
-# 4. CONTEXTUELS : percentiles très larges par défaut (0.1%-99.9%)
-#    Resserrer vers 1%-99% si nécessaire pour être plus strict
+# 4. CONTEXTUAL: very wide percentiles by default (0.1%-99.9%)
+#    Tighten towards 1%-99% if needed to be stricter
 #
-# 5. PHYSIQUE : max_turn_at_speed dépend du type de navire
-#    TSHD standard: 120°, navires plus agiles: jusqu'à 140°
+# 5. PHYSICAL: max_turn_at_speed depends on vessel type
+#    Standard TSHD: 120°, more agile vessels: up to 140°
 # ===============================================================================
 
 # ==============================================================================
-# CONFIGURATION OPTIMISÉE OUTLIERS V6 - BELUGA HPC
+# OPTIMISED V6 OUTLIER CONFIGURATION - BELUGA HPC
 # ==============================================================================
 
-# Gestion données manquantes
-missing_specs_threshold: 0.5     # 50% minimum de spécifications techniques
-min_segment_size: 50            # Taille minimum segment pour analyse
+# Missing data handling
+missing_specs_threshold: 0.5     # 50% minimum of technical specifications
+min_segment_size: 50            # Minimum segment size for analysis
 
-# Paramètres parallélisation (OPTIMISÉ MÉMOIRE)
-parallel_chunk_size: 5000       # Chunks plus petits pour économiser mémoire
-max_parallel_navires: 4         # Maximum 4 navires en parallèle
-gc_frequency: 100               # Garbage collection tous les 100 segments
+# Parallelisation parameters (MEMORY-OPTIMISED)
+parallel_chunk_size: 5000       # Smaller chunks to save memory
+max_parallel_vessels: 4         # Maximum 4 vessels in parallel
+gc_frequency: 100               # Garbage collection every 100 segments
 
-# Configuration avancée
-robust_outlier_detection: true   # Méthodes robustes pour petits échantillons
-memory_conservative: true        # Mode conservateur mémoire activé 
+# Advanced configuration
+robust_outlier_detection: true   # Robust methods for small samples
+memory_conservative: true        # Memory-conservative mode enabled 
 

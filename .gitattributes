@@ -1,18 +1,10 @@
-# Force LF line endings for shell scripts (critical for HPC cluster compatibility)
-*.sh text eol=lf
-*.R  text eol=lf
-*.r  text eol=lf
-*.py text eol=lf
-*.m  text eol=lf
-*.md text eol=lf
-*.yaml text eol=lf
-*.yml  text eol=lf
-*.txt  text eol=lf
-
-# Binary files — no line-ending conversion
-*.rds binary
-*.mat binary
-*.parquet binary
-*.tif binary
-*.nc  binary
+# Preserve the exact scientific source bytes recorded in MANIFEST.tsv.
+* text=auto eol=lf
+pipeline/** -text
+config/** -text
+ocim/** -text
+annual_svr/** -text
+assessment/** -text
+*.png binary
+*.pdf binary
 *.zip binary

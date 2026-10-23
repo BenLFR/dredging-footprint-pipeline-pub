@@ -1,19 +1,32 @@
 {
-  "title": "Global dredging footprint pipeline",
-  "description": "AIS-based workflow to estimate global swept-area ratio (SAR), cumulative risk index (CRI), and optional OCIM2-48L CO2 perturbation outputs.",
+  "title": "Dredging footprint pipeline",
+  "description": "AIS-based mapping of trailing-suction hopper dredging, seabed disturbance and first-year sediment-carbon remineralisation, with annual SVR cap, OCIM forcing and uncertainty assessment. Source-only reconstruction of the October 2026 GRIT workflows; external inputs and the full production environment are not supplied. See README.md for validation scope and remaining gaps.",
   "upload_type": "software",
-  "license": "MIT",
+  "version": "2.0.0",
+  "license": "mit",
   "creators": [
     {
-      "name": "Loeffler, Benjamin"
+      "name": "Loeffler, Benjamin",
+      "orcid": "0009-0008-0641-426X"
+    },
+    {
+      "name": "Wabnitz, Colette",
+      "orcid": "0000-0002-5076-9163"
+    },
+    {
+      "name": "Jouffray, Jean-Baptiste",
+      "orcid": "0000-0002-4105-6372"
+    },
+    {
+      "name": "Mangin, Tracey"
     }
   ],
   "keywords": [
     "dredging",
     "AIS",
-    "swept-area ratio",
-    "cumulative risk index",
+    "sediment carbon",
+    "uncertainty assessment",
     "OCIM"
   ],
-  "notes": "Replace DOI placeholders in repository metadata after Zenodo mints the version DOI."
+  "notes": "Prepared metadata for version 2.0.0; release and Zenodo activation are pending. No DOI has been assigned."
 }

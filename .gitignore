@@ -1,49 +1,48 @@
-# ── Data: restricted / large ──────────────────────────────────────────────────
-data/external/
+# Private paths, credentials and input data
+.env
+.env.*
+paths.env
+*.pem
+data/
 *.rds
+*.RData
+*.qs
+*.fst
 *.parquet
 *.mat
-*.tif
 *.nc
+*.tif
+*.tiff
+*.gpkg
+*.shp
+*.shx
+*.dbf
 *.zip
 
-# ── Pipeline outputs ───────────────────────────────────────────────────────────
-output_V6/
-GeoTIFF_Step*/
-outputs_step*/
-sar_*.parquet
-
-# ── SLURM logs ─────────────────────────────────────────────────────────────────
+# Run products and records
 logs/
 *.out
 *.err
 *.log
+ids_*.txt
+output*/
+assessment/yaml/
+assessment/frac/
+assessment/omega_pd/inputs.tsv
+assessment/omega_pd/bundle.md5
+assessment/omega_pd/audit/
+assessment/omega_pd/submission_claim*/
+pipeline/PIPELINE.md
 
-# ── R environment ──────────────────────────────────────────────────────────────
-.Rhistory
-.RData
-.Rproj.user/
-renv/library/
-
-# ── Python ────────────────────────────────────────────────────────────────────
+# Local language and editor state
 __pycache__/
 *.pyc
 .venv/
-
-# ── OS / editor ───────────────────────────────────────────────────────────────
-Thumbs.db
+.Rhistory
+.Rproj.user/
+renv/library/
 .DS_Store
+Thumbs.db
 *.swp
-nul
-
-# ── Thesis / manuscript (not code) ────────────────────────────────────────────
 *.docx
-*.pdf
 *.xlsx
-
-# ── Windows batch launchers (not reproducible on cluster) ────────────────────
-batch_windows/
-*.bat
-
-# ── Junk files ────────────────────────────────────────────────────────────────
-"'@ + $out + @'"
